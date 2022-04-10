@@ -27,7 +27,7 @@ public:
     enum TYPE{Mice,Cat,Dog,Wolf,Leo,Tiger,Lion,Elephant};
 
 public:
-    void init(int id);
+    void init(int id, bool isRed);
 
     void moveTo(int row, int col);
     void die();

@@ -39,8 +39,10 @@ DEPLOYMENTFOLDERS += assetsFolder
 
 # The .cpp file which was generated for your project. Feel free to hack it.
 SOURCES += main.cpp \
+    animal.cpp \
     board.cpp \
-    chess.cpp
+    chess.cpp \
+    net_board.cpp
 
 
 android {
@@ -70,5 +72,7 @@ DISTFILES += \
     qml/scenes/StartScene.qml
 
 HEADERS += \
+    animal.h \
     board.h \
-    chess.h
+    chess.h \
+    net_board.h

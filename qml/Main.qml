@@ -14,7 +14,11 @@ GameWindow {
 
     StartScene{
         id:startScene
-        onStartButtonclicked: {
+        onDoubleButtonClicked: {
+            gameWindow.state = "board"
+            boardScene.start()
+        }
+        onNetButtonClicked: {
             gameWindow.state = "board"
             boardScene.start()
         }

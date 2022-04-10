@@ -49,7 +49,7 @@ int Chess::ID()
     return m_ID;
 }
 
-void Chess::init(int id){
+void Chess::init(int id, bool isRed){
     if(id<8){
         this->m_row = pos[id].row;
         this->m_col = pos[id].col;
@@ -60,7 +60,7 @@ void Chess::init(int id){
         this->m_type = pos[id-8].type;
     }
     this->m_ID = id;
-    this->m_isRed = (id>=8);
+    this->m_isRed = (id>=8)^isRed;
     this->m_isDead = false;
 
 }

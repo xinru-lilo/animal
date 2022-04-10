@@ -19,20 +19,16 @@ Item {
 
     function initializeField() {
 
-        var block = Qt.createComponent("./Block.qml")
-        for(let j=0;j<otherImg.length;++j){
-            if(j>otherImg.length-3){
-                block.createObject(gameArea,{source:"../../assets/img/Lair.png",
-                                       x:otherImg[j][0]*blockSize,
-                                       y:otherImg[j][1]*blockSize})
-            }else{
-                block.createObject(gameArea,{x:otherImg[j][0]*blockSize,y:otherImg[j][1]*blockSize})
-            }
-            console.log(otherImg[j][0], otherImg[j][1])
-        }
+        initOther()
 
-        //c++init board()
-        for (let i = 0; i!== Board.chess.lenth; i++){
+        initChesses()
+
+        connectBoard()
+
+    }
+
+    function initChesses() {
+        for (let i = 0; i < 16; i++){
 
             let entityProperties = {
                 width: blockSize,
@@ -48,12 +44,24 @@ Item {
                 turn: Board.chess[i].isRed
             }
 
-            // add block to game area
+            // add chess to game area
             var id = entityManager.createEntityFromUrlWithProperties(
                         Qt.resolvedUrl("../entities/Chess.qml"), entityProperties)
             chesses[i] = entityManager.getEntityById(id)
         }
+    }
 
+    function initOther() {
+        var block = Qt.createComponent("./Block.qml")
+        for(let i=0;i<otherImg.length;++i){
+            if(i>otherImg.length-3){
+                block.createObject(gameArea,{source:"../../assets/img/Lair.png",
+                                       x:otherImg[i][0]*blockSize,
+                                       y:otherImg[i][1]*blockSize})
+            }else{
+                block.createObject(gameArea,{x:otherImg[i][0]*blockSize,y:otherImg[i][1]*blockSize})
+            }
+        }
     }
 
     function clearPathes() {
@@ -63,52 +71,59 @@ Item {
         pathes=[]
     }
 
-    Connections{
-        target: Board
-        onPathesChange: {
-            clearPathes()
+    function connectBoard() {
+        Board.pathesChange.connect(onPathesChange)
+        Board.moveChess.connect(onMoveChess)
+        Board.statChange.connect(onStatChange)
+        Board.turnChange.connect(onTurnChange)
+        Board.win.connect(onWin)
+        console.log("connect")
+    }
 
-            for (let i = 0; i!== size; i++){
+    function onPathesChange(size) {
+        clearPathes()
 
-                let entityProperties = {
-                    width: blockSize,
-                    height: blockSize,
-                    x: Board.getPath(i).x * blockSize,
-                    y: Board.getPath(i).y * blockSize,
+        for (let i = 0; i!== size; i++){
 
-                    col: Board.getPath(i).x,
-                    row: Board.getPath(i).y ,
+            let entityProperties = {
+                width: blockSize,
+                height: blockSize,
+                x: Board.getPath(i).x * blockSize,
+                y: Board.getPath(i).y * blockSize,
 
-                }
+                col: Board.getPath(i).x,
+                row: Board.getPath(i).y ,
 
-                // add block to game area
-                var id = entityManager.createEntityFromUrlWithProperties(
-                            Qt.resolvedUrl("../entities/Path.qml"), entityProperties)
-                pathes[i] = entityManager.getEntityById(id)
             }
-            gameArea.pathesChange()
-        }
-        onMoveChess: {
-            chesses[id].x = Board.chess[id].col * blockSize
-            chesses[id].y = Board.chess[id].row * blockSize
 
-            chesses[id].row = Board.chess[id].row
-            chesses[id].col = Board.chess[id].col
-
-            clearPathes()
+            // add block to game area
+            var id = entityManager.createEntityFromUrlWithProperties(
+                        Qt.resolvedUrl("../entities/Path.qml"), entityProperties)
+            pathes[i] = entityManager.getEntityById(id)
         }
-        onStatChange: {
+        gameArea.pathesChange()
+    }
+    function onMoveChess(id) {
+        chesses[id].x = Board.chess[id].col * blockSize
+        chesses[id].y = Board.chess[id].row * blockSize
+
+        chesses[id].row = Board.chess[id].row
+        chesses[id].col = Board.chess[id].col
+
+        clearPathes()
+    }
+    function onStatChange(id) {
 //            chesses[id].removeEntity()
-            chesses[id].visible = !Board.chess[id].isDead
-        }
-        onTurnChange: {
-            for(let i=0;i<chesses.length;++i){
-                chesses[i].turn = !chesses[i].turn
-            }
-        }
-
-        onWin:{
-            console.log(isRed," win!")
+        chesses[id].visible = !Board.chess[id].isDead
+    }
+    function onTurnChange(){
+        for(let i=0;i<chesses.length;++i){
+            chesses[i].turn = !chesses[i].turn
         }
     }
+
+    function onWin(isRed){
+        console.log(isRed," win!")
+    }
+
 }

@@ -13,6 +13,11 @@ Board::~Board()
 
 }
 
+bool Board::isRedTurn()
+{
+    return m_isRedTurn;
+}
+
 QQmlListProperty<Chess> Board::getChess()
 {
     return QQmlListProperty<Chess>(this, m_chess);
@@ -28,10 +33,11 @@ int Board::getPathesSize()
     return m_pathes.size();
 }
 
-void Board::initChess(){
+void Board::initChess(bool isRed){
+    this->m_chess.clear();
     for(int i=0;i<16;i++){
         this->m_chess.append(new Chess());
-        this->m_chess[i]->init(i);
+        this->m_chess[i]->init(i, isRed);
     }
 }
 
@@ -67,7 +73,7 @@ void Board::clickPath(int row, int col)
 
 void Board::clickUndo()
 {
-    if(m_steps.empty())
+    if(m_steps.size() < 2)
         return;
     auto step = m_steps.pop();
     m_chess[step.moveId]->moveTo(step.fromRow, step.fromCol);
@@ -76,12 +82,25 @@ void Board::clickUndo()
         m_chess[step.killId]->resurgence();
         emit statChange(step.killId);
     }
-    turn();
+
+    step = m_steps.pop();
+    m_chess[step.moveId]->moveTo(step.fromRow, step.fromCol);
+    emit moveChess(step.moveId);
+    if (step.killId != -1) {
+        m_chess[step.killId]->resurgence();
+        emit statChange(step.killId);
+    }
+//    turn();
 }
 
 void Board::timeout()
 {
     turn();
+}
+
+void Board::setClickId(int id)
+{
+    m_clickedId = id;
 }
 
 void Board::canMovePath(int id)
