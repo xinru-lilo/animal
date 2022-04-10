@@ -62,8 +62,12 @@ macx {
 }
 
 DISTFILES += \
-    qml/Chess.qml \
-    qml/GameArea.qml
+    qml/common/Block.qml \
+    qml/entities/Chess.qml \
+    qml/common/GameArea.qml \
+    qml/entities/Path.qml \
+    qml/scenes/BoardScene.qml \
+    qml/scenes/StartScene.qml
 
 HEADERS += \
     board.h \

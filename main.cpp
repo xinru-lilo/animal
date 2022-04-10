@@ -34,7 +34,6 @@ int main(int argc, char *argv[])
     // also see the .pro file for more details
     //felgo.setMainQmlFileName(QStringLiteral("qrc:/qml/Main.qml"));
     Board* b = new Board();
-    b->initChess();
     qmlRegisterType<Chess>("Chess",1,0,"Chess");
     engine.rootContext()->setContextProperty("Board", b);
 
