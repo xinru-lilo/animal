@@ -33,6 +33,18 @@ int Board::getPathesSize()
     return m_pathes.size();
 }
 
+QVariantList Board::getLastStep()
+{
+    QVariantList lastStep;
+    if (!m_steps.empty()) {
+        auto step = m_steps.top();
+        lastStep.append(step.moveId);
+        lastStep.append(step.fromRow);
+        lastStep.append(step.fromCol);
+    }
+    return lastStep;
+}
+
 void Board::initChess(bool isRed){
     this->m_chess.clear();
     for(int i=0;i<16;i++){
@@ -58,13 +70,15 @@ void Board::clickPath(int row, int col)
     auto fromcol = m_chess[m_clickedId]->col();
 
     m_chess[m_clickedId]->moveTo(row, col);
-    emit moveChess(m_clickedId);
 
     if (id != -1) {
         m_chess[id]->die();
         emit statChange(id);
     }
     m_steps.push({m_clickedId,id,fromrow,fromcol,row,col});
+
+    emit moveChess(m_clickedId);
+
     if(isWin())
         emit win(m_chess[m_clickedId]->isRed());
     turn();

@@ -30,6 +30,7 @@ public:
     QQmlListProperty<Chess> getChess();
     Q_INVOKABLE QPoint getPath(int idx);
     Q_INVOKABLE int getPathesSize();
+    Q_INVOKABLE QVariantList getLastStep();
     Q_INVOKABLE virtual void clickChess(int id);
     Q_INVOKABLE virtual void clickPath(int row, int col);
     Q_INVOKABLE virtual void clickUndo();

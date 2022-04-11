@@ -15,6 +15,8 @@ Item {
     property var pathes: []
     property var otherImg: [[0,2], [1,3],[0,4],[8,2],[7,3],[8,4],[0,3],[8,3]]
 
+    property var lastStep: []
+
     signal pathesChange()
 
     function initializeField() {
@@ -45,7 +47,7 @@ Item {
             }
 
             // add chess to game area
-            var id = entityManager.createEntityFromUrlWithProperties(
+            let id = entityManager.createEntityFromUrlWithProperties(
                         Qt.resolvedUrl("../entities/Chess.qml"), entityProperties)
             chesses[i] = entityManager.getEntityById(id)
         }
@@ -80,6 +82,37 @@ Item {
         console.log("connect")
     }
 
+    function showLastStep() {
+        let step = Board.getLastStep()
+        console.log(lastStep.length)
+        if (lastStep.length < 1){
+            let entityProperties = {
+                width: blockSize,
+                height: blockSize,
+                x: step[2] * blockSize,
+                y: step[1] * blockSize,
+
+                index: step[0],
+                row: step[1],
+                col: step[2],
+                turn: false,
+                enable: false,
+                opacity: 0.5
+            }
+
+            // add chess to game area
+            let entityId = entityManager.createEntityFromUrlWithProperties(
+                        Qt.resolvedUrl("../entities/Chess.qml"), entityProperties)
+            lastStep[0] = entityManager.getEntityById(entityId)
+        } else {
+            lastStep[0].x = step[2] * blockSize
+            lastStep[0].y = step[1] * blockSize
+
+            lastStep[0].index = step[0]
+        }
+    }
+
+    // Board signal's slots:
     function onPathesChange(size) {
         clearPathes()
 
@@ -97,12 +130,13 @@ Item {
             }
 
             // add block to game area
-            var id = entityManager.createEntityFromUrlWithProperties(
+            let id = entityManager.createEntityFromUrlWithProperties(
                         Qt.resolvedUrl("../entities/Path.qml"), entityProperties)
             pathes[i] = entityManager.getEntityById(id)
         }
         gameArea.pathesChange()
     }
+
     function onMoveChess(id) {
         chesses[id].x = Board.chess[id].col * blockSize
         chesses[id].y = Board.chess[id].row * blockSize
@@ -111,9 +145,10 @@ Item {
         chesses[id].col = Board.chess[id].col
 
         clearPathes()
+
+        showLastStep()
     }
     function onStatChange(id) {
-//            chesses[id].removeEntity()
         chesses[id].visible = !Board.chess[id].isDead
     }
     function onTurnChange(){
