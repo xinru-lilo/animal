@@ -35,7 +35,7 @@ int Animal::run(int argc, char *argv[])
 
     felgo.setMainQmlFileName(QStringLiteral("qml/Main.qml"));
 
-    qmlRegisterType<Chess>("Chess",1,0,"Chess");
+    qmlRegisterType<Chess>();
     engine.rootContext()->setContextObject(this);
 
     engine.load(QUrl(felgo.mainQmlFileName()));
