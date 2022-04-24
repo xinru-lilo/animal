@@ -14,19 +14,31 @@ GameWindow {
 
     StartScene{
         id:startScene
-        onDoubleButtonClicked: {
-            gameWindow.state = "board"
-            boardScene.start()
+        onButtonClicked: {
+            if(pattern!==2){
+                gameWindow.state = "board"
+                boardScene.initBoard()
+            }else{
+                gameWindow.state = "connect"
+                connectScene.initConnectBoard()
+            }
         }
-        onNetButtonClicked: {
+    }
+
+    ConnectScene{
+        id:connectScene
+        visible: false
+        onButtonClicked: {
             gameWindow.state = "board"
-            boardScene.start()
+            boardScene.initBoard()
         }
+        onBack: gameWindow.state = "start"
     }
 
     BoardScene{
         id:boardScene
         visible: false
+        onBack: gameWindow.state = "start"
     }
 
     states: [
@@ -38,10 +50,29 @@ GameWindow {
             }
         },
         State {
+            name: "connect"
+            PropertyChanges {
+                target: connectScene
+                visible:true
+            }
+            PropertyChanges {
+                target: startScene
+                visible:false
+            }
+        },
+        State {
             name: "board"
             PropertyChanges {
                 target: boardScene
                 visible: true
+            }
+            PropertyChanges {
+                target: startScene
+                visible:false
+            }
+            PropertyChanges {
+                target: connectScene
+                visible:false
             }
             PropertyChanges {
                 target: gameWindow

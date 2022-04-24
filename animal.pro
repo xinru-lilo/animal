@@ -42,7 +42,8 @@ SOURCES += main.cpp \
     animal.cpp \
     board.cpp \
     chess.cpp \
-    net_board.cpp
+    net_board.cpp \
+    single_board.cpp
 
 
 android {
@@ -65,14 +66,18 @@ macx {
 
 DISTFILES += \
     qml/common/Block.qml \
+    qml/common/ComButton.qml \
+    qml/common/MyTextEdit.qml \
     qml/entities/Chess.qml \
     qml/common/GameArea.qml \
     qml/entities/Path.qml \
     qml/scenes/BoardScene.qml \
+    qml/scenes/ConnectScene.qml \
     qml/scenes/StartScene.qml
 
 HEADERS += \
     animal.h \
     board.h \
     chess.h \
-    net_board.h
+    net_board.h \
+    single_board.h

@@ -1,5 +1,6 @@
 import QtQuick 2.0
 import Felgo 3.0
+import QtQuick.Controls 2.0
 import "../common"
 
 // EMPTY SCENE
@@ -11,6 +12,7 @@ Scene {
     height: 1300
 
     property int time: 30
+    signal back
 
     BackgroundImage{
         source: "../../assets/img/chessboard.png"
@@ -35,43 +37,94 @@ Scene {
       }
     }
 
-    AppButton{
-        id:undoButton
-        x:20
-        y:9*gameArea.blockSize
-        width: 80
-        text: "undo"
-        onClicked: {
-            Board.clickUndo()
-            timerRestart()
+    Row{
+        x: 30
+        y:9*gameArea.blockSize+50
+        spacing: 50
+        //悔棋按钮
+        ComButton{
+            id: undoButton
+            width: 100
+            height: 70
+            buttonText.text: qsTr("悔棋")
+            onClicked: {
+                Board.clickUndo()
+                timerRestart()
+            }
+        }
+
+        ComButton{
+            id: sumButton
+            width: 100
+            height: 70
+            buttonText.text: qsTr("求和")
+            onClicked: {
+    //            Board.clickUndo()
+                timerRestart()
+            }
+        }
+
+        ComButton{
+            id: losingButton
+            width: 100
+            height: 70
+            buttonText.text: qsTr("认输")
+            onClicked: {
+    //            Board.clickUndo()
+                timerRestart()
+            }
+        }
+
+        ComButton{
+            id: backButton
+            width: 100
+            height: 70
+            buttonText.text: qsTr("返回")
+            onClicked: {
+                entityManager.removeAllEntities()
+                exit()
+                back()
+                timer.stop()
+            }
         }
     }
-    AppButton{
-        id:sumButton
-        x:200
-        y:9*gameArea.blockSize
-        width:80
-        text: "sum"
-        onClicked: {
-//            Board.clickUndo()
-            timerRestart()
-        }
-    }
-    AppButton{
-        id:losingButton
-        x:400
-        y:9*gameArea.blockSize
-        width:80
-        text: "losing"
-        onClicked: {
-//            Board.clickUndo()
-            timerRestart()
-        }
-    }
+
+
 
     AppText {
         id: timeText
     }
+
+    Column{
+        y:9*gameArea.blockSize+150
+        spacing: 40
+        MyTextEdit{
+            id:edit
+            width: 200
+            height: 200
+            readOnly: true
+            Rectangle{
+                anchors.fill: parent
+                color: "#FFFFFF"
+                z: -1
+            }
+        }
+
+        TextEdit{
+            id:chatInput
+            width: 200
+            height: 50
+            Rectangle{
+                anchors.fill: parent
+                color: "#FFFFFF"
+                z: -1
+            }
+        }
+
+        AppButton{
+            onClicked: edit.append("aaaa")
+        }
+}
 
     Timer{
         id:timer
@@ -84,12 +137,12 @@ Scene {
                 gameArea.clearPathes()
                 timerRestart()
             }
-            timeText.text = time.toString()
+            timeText.text = "time:"+time.toString()
         }
     }
 
-    function start(){
-        timer.start()
+    function initBoard(){
+        timerRestart()
         gameArea.initializeField();
     }
 

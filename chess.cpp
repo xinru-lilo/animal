@@ -1,4 +1,5 @@
 #include "chess.h"
+#include <qdebug.h>
 
 struct{
     int row;

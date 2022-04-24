@@ -31,6 +31,7 @@ public:
 
     void moveTo(int row, int col);
     void die();
+    //棋子“复活”
     void resurgence();
 
 private:

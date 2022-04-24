@@ -113,6 +113,7 @@ Item {
     }
 
     // Board signal's slots:
+    //这儿的值传递很多余，为什么不用getpathesize()
     function onPathesChange(size) {
         clearPathes()
 
@@ -138,6 +139,7 @@ Item {
     }
 
     function onMoveChess(id) {
+
         chesses[id].x = Board.chess[id].col * blockSize
         chesses[id].y = Board.chess[id].row * blockSize
 
@@ -147,6 +149,7 @@ Item {
         clearPathes()
 
         showLastStep()
+        console.log("onmovechess")
     }
     function onStatChange(id) {
         chesses[id].visible = !Board.chess[id].isDead
@@ -160,5 +163,6 @@ Item {
     function onWin(isRed){
         console.log(isRed," win!")
     }
+
 
 }

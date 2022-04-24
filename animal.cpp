@@ -1,5 +1,6 @@
 #include "animal.h"
 #include "net_board.h"
+#include "single_board.h"
 
 #include <QApplication>
 #include <FelgoApplication>
@@ -20,6 +21,7 @@ Animal::~Animal()
 {
     if (m_board)
         delete m_board;
+    m_board = nullptr;
 }
 
 int Animal::run(int argc, char *argv[])
@@ -47,15 +49,23 @@ void Animal::selectMode(int mode)
 {
     if (m_board)
         delete m_board;
+    m_board = nullptr;
     switch (mode) {
     case Animal::Double:
         m_board = new Board();
         break;
     case Animal::Smart:
-        m_board = new Board();
+        m_board = new SingleBoard();
         break;
     case Animal::Network:
         m_board = new NetBoard();
         break;
     }
+}
+
+void Animal::exit()
+{
+    if (m_board)
+        delete m_board;
+    m_board = nullptr;
 }

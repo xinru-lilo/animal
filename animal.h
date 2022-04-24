@@ -21,6 +21,7 @@ public:
     int run(int argc, char *argv[]);
 
     Q_INVOKABLE void selectMode(int mode);
+    Q_INVOKABLE void exit();
 
 signals:
 

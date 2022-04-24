@@ -21,7 +21,7 @@ EntityBase {
     MouseArea {
         anchors.fill: parent
         onClicked: {
-            console.log(row,col);
+            console.log("clickPath:",row,col);
             Board.clickPath(row, col)
             path.timerRestart()
         }

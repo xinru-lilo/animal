@@ -9,6 +9,20 @@ NetBoard::NetBoard()
 {
 }
 
+NetBoard::~NetBoard()
+{
+    if(m_socket){
+        m_socket->close();
+        delete m_socket;
+        m_socket = nullptr;
+    }
+    if(m_server){
+        m_server->close();
+        delete m_server;
+        m_server = nullptr;
+    }
+}
+
 void NetBoard::clickChess(int id)
 {
     if ((isRedTurn() ^ m_isRed) || !m_socket)
@@ -43,17 +57,21 @@ void NetBoard::createGame()
 {
     m_server = new QTcpServer(this);      // 创建服务器socket
     m_server->listen(QHostAddress::Any, 9999);   // 监听
-//    QString ip = getIP();
+    m_server->setMaxPendingConnections(1);
     connect(m_server, &QTcpServer::newConnection, this, &NetBoard::onNewConnection);
 }
 
-void NetBoard::joinGame(QString srvIP)
+bool NetBoard::joinGame(QString srvIP)
 {
     m_isRed = true;
     m_socket = new QTcpSocket(this);   // 创建客户端socket
     m_socket->connectToHost(QHostAddress(srvIP), 9999);   // 连接
-    // 当有数据发送过来时，触发信号，调用槽函数
+    qDebug()<<"socket state:"<<m_socket->state();
+    if(!m_socket->waitForConnected())
+        return false;
     connect(m_socket, &QTcpSocket::readyRead, this, &NetBoard::onRead);
+    qDebug()<<"socket state:"<<m_socket->state();
+    return true;
 }
 
 QString NetBoard::getIP()
@@ -69,15 +87,16 @@ QString NetBoard::getIP()
 
 void NetBoard::onNewConnection()
 {
-    if (m_socket)
+    if (m_socket){
+        m_server->nextPendingConnection()->close();
         return;
-
+    }
     // 接收连接，等同于C语言里的accept，返回值类似于C语言里的文件描述符
     m_socket = m_server->nextPendingConnection();
     // 当有客户端数据发送过来时，触发信号，调用槽函数
     connect(m_socket, &QTcpSocket::readyRead, this, &NetBoard::onRead);
     qDebug() <<"newConnect";
-    emit connected();
+    emit netConnected();
 }
 
 void NetBoard::onRead()
@@ -104,3 +123,5 @@ void NetBoard::onRead()
         break;
     }
 }
+
+

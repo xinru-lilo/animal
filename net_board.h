@@ -11,18 +11,21 @@ class NetBoard : public Board
 {
 public:
     NetBoard();
+    ~NetBoard();
 
     void clickChess(int id) override;
     void clickPath(int row, int col) override;
     void clickUndo() override;
 
-    Q_INVOKABLE void createGame() override;
-    Q_INVOKABLE void joinGame(QString srvIP) override;
+    void createGame() override;
+    bool joinGame(QString srvIP) override;
     QString getIP() override;
 
 private slots:
     void onNewConnection();
     void onRead();
+protected:
+    bool creatNewConnect(QString srvIP);
 
 private:
     QTcpServer* m_server;
