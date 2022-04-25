@@ -162,6 +162,8 @@ Item {
 
     function onWin(isRed){
         console.log(isRed," win!")
+        boardScene.win(1,isRed);
+//        boardScene.destroy()
     }
 
 

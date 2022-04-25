@@ -73,6 +73,7 @@ DISTFILES += \
     qml/entities/Path.qml \
     qml/scenes/BoardScene.qml \
     qml/scenes/ConnectScene.qml \
+    qml/scenes/GameoverScene.qml \
     qml/scenes/StartScene.qml
 
 HEADERS += \

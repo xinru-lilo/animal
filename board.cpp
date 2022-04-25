@@ -138,6 +138,10 @@ void Board::clickUndo()
 //    emit turnChange();
 }
 
+//void Board::clickSum(){
+//    emit
+//}
+
 void Board::timeout()
 {
     turn();
@@ -271,10 +275,3 @@ QList<Chess*> Board::getChesses()
 {
     return m_chesses;
 }
-////can shu ke xiu gai
-//void Board::moveTo(int id,int row,int col){
-//    m_chesses[id]->moveTo(row,col);
-//    if (id != -1) {
-//        m_chesses[id]->die();
-//    }
-//}

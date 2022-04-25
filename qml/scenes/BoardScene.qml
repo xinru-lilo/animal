@@ -12,7 +12,9 @@ Scene {
     height: 1300
 
     property int time: 30
+//    property bool isNetPattern: false
     signal back
+    signal win(int which,int who)
 
     BackgroundImage{
         source: "../../assets/img/chessboard.png"
@@ -82,9 +84,9 @@ Scene {
             buttonText.text: qsTr("返回")
             onClicked: {
                 entityManager.removeAllEntities()
-                exit()
-                back()
                 timer.stop()
+                back()
+                exit()
             }
         }
     }
@@ -97,6 +99,7 @@ Scene {
 
     Column{
         y:9*gameArea.blockSize+150
+        x:230
         spacing: 40
         MyTextEdit{
             id:edit
@@ -110,10 +113,12 @@ Scene {
             }
         }
 
-        TextEdit{
+        AppTextInput{
             id:chatInput
             width: 200
             height: 50
+
+            font.pixelSize: 30
             Rectangle{
                 anchors.fill: parent
                 color: "#FFFFFF"
@@ -122,7 +127,13 @@ Scene {
         }
 
         AppButton{
-            onClicked: edit.append("aaaa")
+            id:chatButton
+            enabled: chatInput.text.length
+            onClicked: {
+                edit.append("my:"+chatInput.text)
+                Board.sendMasg(chatInput.text)
+                chatInput.clear()
+            }
         }
 }
 
@@ -142,6 +153,8 @@ Scene {
     }
 
     function initBoard(){
+        Board.newMessage.connect(onNewMessage)
+        entityManager.removeAllEntities()
         timerRestart()
         gameArea.initializeField();
     }
@@ -151,6 +164,9 @@ Scene {
         timer.restart()
         timeText.text = time.toString()
         console.log("timer restart")
+    }
+    function onNewMessage(msg) {
+        edit.append("you:"+msg)
     }
 
 }

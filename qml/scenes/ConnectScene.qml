@@ -12,6 +12,7 @@ Scene {
 
     signal buttonClicked
     signal back
+    signal netPattern(int who)
 
     BackgroundImage{
         source: "../../assets/img/background.jpg"
@@ -42,6 +43,7 @@ Scene {
                 ip.visible = true;
                 ip.text = Board.getIP()
                 Board.netConnected.connect(onNetConnected)
+                connectScene.netPattern(0)
             }
         }
 
@@ -56,6 +58,7 @@ Scene {
 
                 ipInput.visible = true
                 ipButton.visible = true
+                connectScene.netPattern(1)
 
             }
         }

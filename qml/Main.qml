@@ -33,10 +33,27 @@ GameWindow {
             boardScene.initBoard()
         }
         onBack: gameWindow.state = "start"
+        onNetPattern: {
+            gameoverScene.isNetPattern = true;
+            gameoverScene.netWho = who;
+//            boardScene.isNetPattern = true;
+        }
     }
 
     BoardScene{
         id:boardScene
+        visible: false
+        onBack: gameWindow.state = "start"
+        onWin: {
+            gameoverScene.value = which
+            gameoverScene.who = who
+            console.log(gameoverScene.value)
+            gameWindow.state = "gameover"
+        }
+    }
+
+    GameoverScene{
+        id:gameoverScene
         visible: false
         onBack: gameWindow.state = "start"
     }
@@ -48,6 +65,18 @@ GameWindow {
                 target: gameWindow
                 activeScene:startScene
             }
+            PropertyChanges {
+                target: gameoverScene
+                visible: false
+            }
+            PropertyChanges {
+                target: boardScene
+                visible: false
+            }
+            PropertyChanges {
+                target: connectScene
+                visible:false
+            }
         },
         State {
             name: "connect"
@@ -58,6 +87,10 @@ GameWindow {
             PropertyChanges {
                 target: startScene
                 visible:false
+            }
+            PropertyChanges {
+                target: gameWindow
+                activeScene:connectScene
             }
         },
         State {
@@ -77,6 +110,21 @@ GameWindow {
             PropertyChanges {
                 target: gameWindow
                 activeScene: boardScene
+            }
+        },
+        State {
+            name: "gameover"
+            PropertyChanges {
+                target: gameWindow
+                activeScene: gameoverScene
+            }
+            PropertyChanges {
+                target: gameoverScene
+                visible: true
+            }
+            PropertyChanges {
+                target: boardScene
+                visible: false
             }
         }
     ]

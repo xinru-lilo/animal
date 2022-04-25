@@ -20,6 +20,7 @@ public:
     void createGame() override;
     bool joinGame(QString srvIP) override;
     QString getIP() override;
+    void sendMasg(QString masg) override;
 
 private slots:
     void onNewConnection();

@@ -15,7 +15,7 @@ Item {
         TextArea{
             id:textEdit
             text: ""
-            font.pixelSize: 50
+            font.pixelSize: dp(16)
         }
     }
 

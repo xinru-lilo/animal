@@ -1,5 +1,4 @@
 #include "net_board.h"
-
 #include <QtNetwork>
 
 NetBoard::NetBoard()
@@ -85,8 +84,17 @@ QString NetBoard::getIP()
     return "127.0.0.1";
 }
 
+void NetBoard::sendMasg(QString masg)
+{
+    auto str = 3 + masg;
+    QByteArray buf = str.toUtf8().data();
+    m_socket->write(buf, buf.size());
+
+}
+
 void NetBoard::onNewConnection()
 {
+
     if (m_socket){
         m_server->nextPendingConnection()->close();
         return;
@@ -118,6 +126,10 @@ void NetBoard::onRead()
     case 2: {
         Board::clickUndo();
         break;
+    }
+    case 3: {
+        QString msg = buf.mid(1);
+        emit newMessage(msg);
     }
     default:
         break;

@@ -10,7 +10,6 @@ Scene {
     height: 1300
 
     signal buttonClicked(int pattern)
-//    signal exited
 
     BackgroundImage{
         source: "../../assets/img/background.jpg"

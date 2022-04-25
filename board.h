@@ -40,12 +40,14 @@ public:
     Q_INVOKABLE virtual void clickPath(int row, int col);
     //悔棋
     Q_INVOKABLE virtual void clickUndo();
+//    Q_INVOKABLE virtual void clickSum();
     //超时
     Q_INVOKABLE void timeout();
-    //net
+    //net    
     Q_INVOKABLE virtual void createGame(){};
     Q_INVOKABLE virtual bool joinGame(QString /*srvIP*/){return false;};
     Q_INVOKABLE virtual QString getIP(){return "";};
+    Q_INVOKABLE virtual void sendMasg(QString /*masg*/){};
 
 signals:
     //通知ui棋子的路径已更新
@@ -60,6 +62,8 @@ signals:
 
     void netConnected();
     void moveTo(int id,int row,int col);
+
+    void newMessage(QString msg);
 
 protected:
     void initChess(bool isRed = false);
