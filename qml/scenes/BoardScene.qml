@@ -1,7 +1,6 @@
 import QtQuick 2.0
 import Felgo 3.0
 import QtQuick.Controls 2.0
-import QtQuick.Dialogs 1.2
 import "../common"
 
 // EMPTY SCENE
@@ -94,31 +93,7 @@ Scene {
             width: 100
             height: 70
             buttonText.text: qsTr("返回")
-            onClicked: backDialog.open()
-        }
-    }
-    MessageDialog{
-        id:backDialog
-        width: implicitWidth
-        height: implicitHeight
-        text: qsTr("您确定要返回吗？")
-        standardButtons: MessageDialog.Yes |MessageDialog.No
-        onAccepted: {
-            if(isNetPattern){
-                chatArea.visible = false
-                losingButton.visible = false
-                edit.clear()
-                chatInput.clear()
-                isNetPattern = false;
-            }
-            if(isSinglePattern){
-                losingButton.visible = false
-                isSinglePattern = false
-            }
-            entityManager.removeAllEntities()
-            timer.stop()
-            back()
-            exit()
+            onClicked: backDialog.show(qsTr("您确定要返回吗？"), qsTr("确定"), qsTr("取消"))
         }
     }
 
@@ -192,12 +167,35 @@ Scene {
         }
     }
 
-    MessageDialog{
+    Dialog{
+        id:backDialog
+        anchors.fill: parent
+        enabled: false
+        standardButtons: Dialog.DialogButton.Ok | Dialog.DialogButton.Cancel
+        onAccepted: {
+            if(isNetPattern){
+                chatArea.visible = false
+                losingButton.visible = false
+                edit.clear()
+                chatInput.clear()
+                isNetPattern = false;
+            }
+            if(isSinglePattern){
+                losingButton.visible = false
+                isSinglePattern = false
+            }
+            entityManager.removeAllEntities()
+            timer.stop()
+            back()
+            exit()
+        }
+    }
+
+    Dialog{
         id:askSumDialog
-        width: implicitWidth
-        height: implicitHeight
-        text: qsTr("对方求和，您是否同意？")
-        standardButtons: MessageDialog.Yes |MessageDialog.No
+        anchors.fill: parent
+        enabled: false
+        standardButtons: Dialog.DialogButton.Ok | Dialog.DialogButton.Cancel
         onAccepted: {
             Board.applySum(1);
             boardScene.sum(0)
@@ -205,19 +203,18 @@ Scene {
         onRejected: Board.applySum(0)
     }
 
-    MessageDialog{
+    Dialog{
         id:tipsDialog
-        width: implicitWidth
-        height: implicitHeight
-        standardButtons: MessageDialog.Ok
+        anchors.fill: parent
+        enabled: false
+        standardButtons: Dialog.DialogButton.Ok
     }
 
-    MessageDialog{
+    Dialog{
         id:tipDialog
-        width: implicitWidth
-        height: implicitHeight
-        text: qsTr("对方已认输!")
-        standardButtons: MessageDialog.Ok
+        anchors.fill: parent
+        enabled: false
+        standardButtons: Dialog.DialogButton.Ok
         onAccepted: boardScene.win(1,isMe)
     }
 
@@ -254,19 +251,18 @@ Scene {
         edit.append("friend:"+msg)
     }
     function onAskSum(){
-        askSumDialog.open()
+        askSumDialog.show(qsTr("对方求和，您是否同意？"), qsTr("同意"), qsTr("拒绝"))
     }
     function onAnswerSum(value){
         if(value===1)
             boardScene.sum(0)
         else{
-            tipsDialog.text = qsTr("对方拒绝求和!")
-            tipsDialog.open()
+            tipsDialog.show(qsTr("对方拒绝求和!"), qsTr("确定"))
         }
     }
     function onOppoDefeat(){
 //        tipsDialog.text = qsTr("对方已认输!")
-        tipDialog.open()
+        tipDialog.show(qsTr("对方已认输!"), qsTr("确定"))
     }
 
 }

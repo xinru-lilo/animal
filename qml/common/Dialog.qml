@@ -7,10 +7,16 @@ Rectangle {
     property alias enabled: mouseArea.enabled
     property int dialogWidth: 500
     property int dialogHeight: 300
+    property int standardButtons: Dialog.DialogButton.Ok | Dialog.DialogButton.Cancel
     state: enabled ? "on" : "baseState"
 
-    signal ok
-    signal cancel
+    enum DialogButton {
+        Ok = 0x1,
+        Cancel = 0x2
+    }
+
+    signal accepted
+    signal rejected
 
     states: [
         State {
@@ -50,8 +56,7 @@ Rectangle {
         Text {
             id: text
             width: parent.width
-            anchors.top: parent.top
-            anchors.bottom: okBtn.top
+            height: 200
             anchors.margins: 10
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
@@ -60,28 +65,34 @@ Rectangle {
             wrapMode: Text.WordWrap
         }
 
-        ComButton{
-            id: okBtn
-            y:200
-            x:50
-            width: 200
+        Row {
+            y: 180
+            anchors.horizontalCenter: parent.horizontalCenter
             height: 70
-            buttonText.text: qsTr("OK")
-            onClicked: {
-                ok()
-                root.enabled = false
+            spacing: 5
+            ComButton {
+                id: okBtn
+                width: 200
+                height: 70
+                buttonText.text: qsTr("OK")
+                visible: standardButtons & Dialog.DialogButton.Ok
+                onClicked: {
+                    accepted()
+                    root.enabled = false
+                    root.z = -1
+                }
             }
-        }
-        ComButton{
-            id: cancelBtn
-            y:200
-            x:250
-            width: 200
-            height: 70
-            buttonText.text: qsTr("Cancel")
-            onClicked: {
-                cancel()
-                root.enabled = false
+            ComButton {
+                id: cancelBtn
+                width: 200
+                height: 70
+                buttonText.text: qsTr("Cancel")
+                visible: standardButtons & Dialog.DialogButton.Cancel
+                onClicked: {
+                    rejected()
+                    root.enabled = false
+                    root.z = -1
+                }
             }
         }
     }
@@ -92,8 +103,11 @@ Rectangle {
         z:-1
     }
 
-    function show(msg) {
+    function show(msg, leftBtn="OK", rightBtn="Cancel") {
         text.text = msg
+        okBtn.buttonText.text = leftBtn
+        cancelBtn.buttonText.text = rightBtn
         root.enabled = true
+        root.z = 1000
     }
 }
