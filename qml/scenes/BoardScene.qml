@@ -1,6 +1,7 @@
 import QtQuick 2.0
 import Felgo 3.0
 import QtQuick.Controls 2.0
+import QtQuick.Dialogs 1.2
 import "../common"
 
 // EMPTY SCENE
@@ -13,9 +14,11 @@ Scene {
 
     property int time: 30
     property bool isNetPattern: false
+    property bool isSinglePattern: false
+    property int isMe: 0
     signal back
     signal win(int which,int who)
-    signal sum()
+    signal sum(int which)
 
     BackgroundImage{
         source: "../../assets/img/chessboard.png"
@@ -63,19 +66,26 @@ Scene {
             buttonText.text: qsTr("求和")
             onClicked: {
     //            Board.clickUndo()
-                boardScene.sum()
-                timerRestart()
+                if(isNetPattern)
+                    Board.clickSum()
+                else
+                    boardScene.sum(0)
             }
         }
 
         ComButton{
             id: losingButton
+            visible: false
             width: 100
             height: 70
             buttonText.text: qsTr("认输")
             onClicked: {
-    //            Board.clickUndo()
-                timerRestart()
+                if(isNetPattern){
+                    Board.clickLose()
+                    boardScene.win(1,1-isMe)
+                }
+                if(isSinglePattern)
+                    boardScene.win(1,1)
             }
         }
 
@@ -84,22 +94,33 @@ Scene {
             width: 100
             height: 70
             buttonText.text: qsTr("返回")
-            onClicked: {
-                if(isNetPattern){
-                    chatArea.visible = false
-                    edit.clear()
-                    chatInput.clear()
-                    isNetPattern = false;
-                }
-                entityManager.removeAllEntities()
-                timer.stop()
-                back()
-                exit()  
-            }
+            onClicked: backDialog.open()
         }
     }
-
-
+    MessageDialog{
+        id:backDialog
+        width: implicitWidth
+        height: implicitHeight
+        text: qsTr("您确定要返回吗？")
+        standardButtons: MessageDialog.Yes |MessageDialog.No
+        onAccepted: {
+            if(isNetPattern){
+                chatArea.visible = false
+                losingButton.visible = false
+                edit.clear()
+                chatInput.clear()
+                isNetPattern = false;
+            }
+            if(isSinglePattern){
+                losingButton.visible = false
+                isSinglePattern = false
+            }
+            entityManager.removeAllEntities()
+            timer.stop()
+            back()
+            exit()
+        }
+    }
 
     AppText {
         id: timeText
@@ -127,11 +148,10 @@ Scene {
 
         Row{
             spacing: 40
-            AppTextInput{
+            MyTextEdit{
                 id:chatInput
                 width: 450
                 height: 50
-
                 font.pixelSize: 30
                 Rectangle{
                     anchors.fill: parent
@@ -172,13 +192,56 @@ Scene {
         }
     }
 
+    MessageDialog{
+        id:askSumDialog
+        width: implicitWidth
+        height: implicitHeight
+        text: qsTr("对方求和，您是否同意？")
+        standardButtons: MessageDialog.Yes |MessageDialog.No
+        onAccepted: {
+            Board.applySum(1);
+            boardScene.sum(0)
+        }
+        onRejected: Board.applySum(0)
+    }
+
+    MessageDialog{
+        id:tipsDialog
+        width: implicitWidth
+        height: implicitHeight
+        standardButtons: MessageDialog.Ok
+    }
+
+    MessageDialog{
+        id:tipDialog
+        width: implicitWidth
+        height: implicitHeight
+        text: qsTr("对方已认输!")
+        standardButtons: MessageDialog.Ok
+        onAccepted: boardScene.win(1,isMe)
+    }
+
     function initBoard(){
+        Board.timerRestart.connect(timerRestart)
         Board.newMessage.connect(onNewMessage)
+        Board.askSum.connect(onAskSum)
+        Board.answerSum.connect(onAnswerSum)
+        Board.oppoDefeat.connect(onOppoDefeat)
+
         entityManager.removeAllEntities()
         timerRestart()
         gameArea.initializeField();
-        if(isNetPattern)
+        chatArea.visible = false
+        edit.clear()
+        chatInput.clear()
+        losingButton.visible = false;
+
+        if(isNetPattern){
             chatArea.visible = true
+            losingButton.visible = true
+        }
+        if(isSinglePattern)
+            losingButton.visible = true
     }
 
     function timerRestart() {
@@ -189,6 +252,21 @@ Scene {
     }
     function onNewMessage(msg) {
         edit.append("friend:"+msg)
+    }
+    function onAskSum(){
+        askSumDialog.open()
+    }
+    function onAnswerSum(value){
+        if(value===1)
+            boardScene.sum(0)
+        else{
+            tipsDialog.text = qsTr("对方拒绝求和!")
+            tipsDialog.open()
+        }
+    }
+    function onOppoDefeat(){
+//        tipsDialog.text = qsTr("对方已认输!")
+        tipDialog.open()
     }
 
 }

@@ -10,7 +10,7 @@ Scene {
     width: 750
     height: 1300
 
-    signal buttonClicked
+    signal buttonClicked(int who)
     signal back
     signal netPattern(int who)
 
@@ -105,7 +105,7 @@ Scene {
                 let ret = Board.joinGame(ipInput.text)
                 console.log(ret)
                 if(ret){
-                    connectScene.buttonClicked()
+                    connectScene.buttonClicked(1)
                 }
 //                Board.netConnected.connect(onNetConnected)
             }
@@ -136,7 +136,7 @@ Scene {
     }
 
     function onNetConnected() {
-        connectScene.buttonClicked()
+        connectScene.buttonClicked(0)
         console.log("onNetConnected")
     }
 }

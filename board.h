@@ -40,8 +40,9 @@ public:
     Q_INVOKABLE virtual void clickPath(int row, int col);
     //悔棋
     Q_INVOKABLE virtual void clickUndo();
-//    Q_INVOKABLE virtual void clickSum();
-//    Q_INVOKABLE virtual void clicklose();
+    Q_INVOKABLE virtual void clickSum(){};
+    Q_INVOKABLE virtual void applySum(int /*value*/){};
+    Q_INVOKABLE virtual void clickLose(){};
     //超时
     Q_INVOKABLE void timeout();
     //net    
@@ -65,7 +66,11 @@ signals:
     void moveTo(int id,int row,int col);
 
     void newMessage(QString msg);
-//    void timerRestart();
+    void askSum();
+    void answerSum(int value);
+    void oppoDefeat();
+
+    void timerRestart();
 protected:
     void initChess(bool isRed = false);
     void setClickId(int id);

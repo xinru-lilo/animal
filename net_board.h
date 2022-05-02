@@ -16,6 +16,9 @@ public:
     void clickChess(int id) override;
     void clickPath(int row, int col) override;
     void clickUndo() override;
+    void clickSum() override;
+    void applySum(int value) override;
+    void clickLose() override;
 
     void createGame() override;
     bool joinGame(QString srvIP) override;

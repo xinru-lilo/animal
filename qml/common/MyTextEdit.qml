@@ -8,6 +8,7 @@ Item {
 
     property alias text: textEdit.text
     property alias readOnly: textEdit.readOnly
+    property alias font: textEdit.font
 
     ScrollView{
         id:view

@@ -8,6 +8,9 @@ GameWindow {
     state: "start"
     activeScene: startScene
 
+//    state: "board"
+//    activeScene: boardScene
+
 //    onSplashScreenFinished: startScene.start()
     screenWidth: 640
     screenHeight: 960
@@ -15,12 +18,15 @@ GameWindow {
     StartScene{
         id:startScene
         onButtonClicked: {
-            if(pattern!==2){
+            if(pattern===0){
                 gameWindow.state = "board"
-                boardScene.initBoard()
-                boardScene.isNetPattern = false;
-                gameoverScene.isNetPattern = false;
+                boardScene.initBoard()            
 
+            }else if(pattern===1){
+                gameWindow.state = "board"
+                boardScene.isSinglePattern = true;
+                gameoverScene.isSinglePattern = true
+                boardScene.initBoard()
             }else{
                 gameWindow.state = "connect"
                 connectScene.initConnectBoard()
@@ -33,9 +39,13 @@ GameWindow {
         visible: false
         onButtonClicked: {
             gameWindow.state = "board"
+            boardScene.isMe = who
             boardScene.initBoard()
         }
-        onBack: gameWindow.state = "start"
+        onBack: {
+            gameWindow.state = "start"
+            boardScene.isNetPattern = false
+        }
         onNetPattern: {
             gameoverScene.isNetPattern = true;
             gameoverScene.netWho = who;
@@ -48,14 +58,13 @@ GameWindow {
         visible: false
         onBack: gameWindow.state = "start"
         onWin: {
-            gameoverScene.value = which
-            gameoverScene.who = who
-            console.log(gameoverScene.value)
+            gameoverScene.changeImage(which,who)
+            gameoverScene.changeText(which,who)
             gameWindow.state = "gameover"
         }
         onSum: {
-            gameoverScene.value = 0
-//            gameoverScene.who = 1
+            gameoverScene.changeImage(which,1)
+            gameoverScene.changeText(which,1)
             gameWindow.state = "gameover"
         }
     }
@@ -63,7 +72,11 @@ GameWindow {
     GameoverScene{
         id:gameoverScene
         visible: false
-        onBack: gameWindow.state = "start"
+        onBack: {
+            boardScene.isNetPattern = false
+            boardScene.isSinglePattern = false
+            gameWindow.state = "start"
+        }
     }
 
     states: [

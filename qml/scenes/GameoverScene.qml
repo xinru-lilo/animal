@@ -10,10 +10,10 @@ Scene {
     width: 750
     height: 1300
 
-    property int value: 1
-    property int who: 1
     property bool isNetPattern: false
+    property bool isSinglePattern: false
     property int netWho: 1
+    property alias editext: edit1.text
 
     signal back
 
@@ -34,21 +34,6 @@ Scene {
         height: 216
         y:240
         anchors.horizontalCenter: parent.horizontalCenter
-        source: {
-            if(isNetPattern){
-                if(value===1){
-                    if(who===netWho)
-                        return "../../assets/img/win.png"
-                    else
-                        return "../../assets/img/lose.png"
-                }
-            }else{
-                if(value===0)
-                    return "../../assets/img/sum.png"
-                else if(value===1)
-                    return "../../assets/img/win.png"
-            }
-        }
         Image {
             id: gameoverbg
             source: "../../assets/img/gameoverbg.png"
@@ -64,27 +49,11 @@ Scene {
                 width: parent.width-58
                 height: 60
                 anchors.horizontalCenter: parent.horizontalCenter
-                TextEdit{
+                Text{
+                    id:edit1
                     anchors.centerIn: parent
-                    readOnly: true
-//                    font.pixelSize: 30
-//                    color: "#FFFFFF"
-                    text:{
-                        console.log("value:",value)
-                        if(value===0){
-                            return "平局"
-                        }else if(value===1){
-                            if(who==1)
-                                return "红方          胜利"
-                            else
-                                return  "红方         失败"
-                        }
-//                        if(who==1)
-//                            return "红方          胜利"
-//                        else
-//                            return  "红方         失败"
-//                        return ""
-                    }
+                    font.pixelSize: 30
+                    color: "#FFFFFF"
                 }
             }
 
@@ -94,25 +63,11 @@ Scene {
                 width: parent.width-58
                 height: 60
                 anchors.horizontalCenter: parent.horizontalCenter
-                TextArea{
+                Text{
+                    id:edit2
                     anchors.centerIn: parent
-                    readOnly: true
                     font.pixelSize: 30
                     color: "#FFFFFF"
-                    text:{
-//                        if(value==0){
-//                            return "平局"
-//                        }else{
-//                            if(who==1)
-//                                return "蓝方          失败"
-//                            else
-//                                return  "蓝方         胜利"
-//                        }
-                        if(who==1)
-                            return "红方          胜利"
-                        else
-                            return  "红方         失败"
-                    }
                 }
             }
         }
@@ -126,7 +81,48 @@ Scene {
         height: 70
         buttonText.text: qsTr("返回")
         onClicked: {
+            if(isNetPattern)
+                isNetPattern = false
+            if(isSinglePattern)
+                isSinglePattern = false
             back()
+        }
+    }
+
+    function changeImage(which,who){
+        if(isNetPattern){
+            if(which===1){
+                if(who===netWho)
+                    whowin.source =  "../../assets/img/win.png"
+                else
+                    whowin.source = "../../assets/img/lose.png"
+            }else if(which===0)
+                whowin.source = "../../assets/img/sum.png"
+        }else if(isSinglePattern){
+            if(which===0)
+                whowin.source = "../../assets/img/sum.png"
+            else if(which===1)
+                whowin.source = "../../assets/img/lose.png"
+        }else{
+            if(which===0)
+                whowin.source = "../../assets/img/sum.png"
+            else if(which===1)
+                whowin.source = "../../assets/img/win.png"
+        }
+    }
+
+    function changeText(which,who){
+        if(which===0){
+            edit1.text = "红方          平局"
+            edit2.text = "蓝方          平局"
+        }else if(which===1){
+            if(who===1){
+                edit1.text ="红方          胜利"
+                edit2.text = "蓝方          失败"
+            }else{
+                edit1.text ="蓝方          胜利"
+                edit2.text = "红方         失败"
+            }
         }
     }
 }

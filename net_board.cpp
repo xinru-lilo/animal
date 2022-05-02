@@ -52,6 +52,36 @@ void NetBoard::clickUndo()
     m_socket->write(&buf, 1);
 }
 
+void NetBoard::sendMasg(QString masg)
+{
+    auto str = 3 + masg;
+    QByteArray buf = str.toUtf8().data();
+    m_socket->write(buf, buf.size());
+
+}
+
+void NetBoard::clickSum()
+{
+    if (isRedTurn() ^ m_isRed)
+        return;
+    char buf = 4;
+    m_socket->write(&buf, 1);
+}
+
+void NetBoard::applySum(int value)
+{
+    char buf[2];
+    buf[0] =5;
+    buf[1] = value;
+    m_socket->write(buf,2);
+}
+
+void NetBoard::clickLose()
+{
+    char buf = 6;
+    m_socket->write(&buf, 1);
+}
+
 void NetBoard::createGame()
 {
     m_server = new QTcpServer(this);      // 创建服务器socket
@@ -84,14 +114,6 @@ QString NetBoard::getIP()
     return "127.0.0.1";
 }
 
-void NetBoard::sendMasg(QString masg)
-{
-    auto str = 3 + masg;
-    QByteArray buf = str.toUtf8().data();
-    m_socket->write(buf, buf.size());
-
-}
-
 void NetBoard::onNewConnection()
 {
 
@@ -111,6 +133,7 @@ void NetBoard::onRead()
 {
     QByteArray buf = m_socket->readAll();
     char cmd = buf[0];
+    qDebug()<<"cmd:"<<cmd;
     switch (cmd) {
     case 0: {
         int id = buf[1];
@@ -121,7 +144,7 @@ void NetBoard::onRead()
         int row = buf[1];
         int col = buf[2];
         Board::clickPath(row, col);
-//        emit timerRestart();
+        emit timerRestart();
         break;
     }
     case 2: {
@@ -131,15 +154,21 @@ void NetBoard::onRead()
     case 3: {
         QString msg = buf.mid(1);
         emit newMessage(msg);
+        break;
     }
-//    case 4:{
-//        Board::clickSum();
-//        break;
-//    }
-//    case 5:{
-//        Board::clicklose();
-//        break;
-//    }
+    case 4:{
+        emit askSum();
+        break;
+    }
+    case 5:{
+        int value = buf[1];
+        emit answerSum(value);
+        break;
+    }
+    case 6:{
+        emit oppoDefeat();
+        break;
+    }
     default:
         break;
     }
