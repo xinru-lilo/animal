@@ -1,5 +1,6 @@
 import QtQuick 2.0
 import Felgo 3.0
+import QtQuick.Controls 2.5
 import "../common"
 
 // EMPTY SCENE
@@ -66,13 +67,23 @@ Scene {
                 TextEdit{
                     anchors.centerIn: parent
                     readOnly: true
-                    font.pixelSize: 30
-                    color: "#FFFFFF"
+//                    font.pixelSize: 30
+//                    color: "#FFFFFF"
                     text:{
-                        if(who==1)
-                            return "红方          胜利"
-                        else
-                            return  "红方         失败"
+                        console.log("value:",value)
+                        if(value===0){
+                            return "平局"
+                        }else if(value===1){
+                            if(who==1)
+                                return "红方          胜利"
+                            else
+                                return  "红方         失败"
+                        }
+//                        if(who==1)
+//                            return "红方          胜利"
+//                        else
+//                            return  "红方         失败"
+//                        return ""
                     }
                 }
             }
@@ -83,16 +94,24 @@ Scene {
                 width: parent.width-58
                 height: 60
                 anchors.horizontalCenter: parent.horizontalCenter
-                TextEdit{
+                TextArea{
                     anchors.centerIn: parent
                     readOnly: true
                     font.pixelSize: 30
                     color: "#FFFFFF"
                     text:{
+//                        if(value==0){
+//                            return "平局"
+//                        }else{
+//                            if(who==1)
+//                                return "蓝方          失败"
+//                            else
+//                                return  "蓝方         胜利"
+//                        }
                         if(who==1)
-                            return "蓝方          失败"
+                            return "红方          胜利"
                         else
-                            return  "蓝方         胜利"
+                            return  "红方         失败"
                     }
                 }
             }

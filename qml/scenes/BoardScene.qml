@@ -12,9 +12,10 @@ Scene {
     height: 1300
 
     property int time: 30
-//    property bool isNetPattern: false
+    property bool isNetPattern: false
     signal back
     signal win(int which,int who)
+    signal sum()
 
     BackgroundImage{
         source: "../../assets/img/chessboard.png"
@@ -40,9 +41,9 @@ Scene {
     }
 
     Row{
-        x: 30
         y:9*gameArea.blockSize+50
-        spacing: 50
+        anchors.horizontalCenter: parent.horizontalCenter
+        spacing: 80
         //悔棋按钮
         ComButton{
             id: undoButton
@@ -62,6 +63,7 @@ Scene {
             buttonText.text: qsTr("求和")
             onClicked: {
     //            Board.clickUndo()
+                boardScene.sum()
                 timerRestart()
             }
         }
@@ -83,10 +85,16 @@ Scene {
             height: 70
             buttonText.text: qsTr("返回")
             onClicked: {
+                if(isNetPattern){
+                    chatArea.visible = false
+                    edit.clear()
+                    chatInput.clear()
+                    isNetPattern = false;
+                }
                 entityManager.removeAllEntities()
                 timer.stop()
                 back()
-                exit()
+                exit()  
             }
         }
     }
@@ -98,41 +106,53 @@ Scene {
     }
 
     Column{
+        id:chatArea
+        visible: false
         y:9*gameArea.blockSize+150
-        x:230
-        spacing: 40
+        anchors.horizontalCenter: parent.horizontalCenter
+        spacing: 20
         MyTextEdit{
             id:edit
-            width: 200
+            width: 600
             height: 200
             readOnly: true
             Rectangle{
                 anchors.fill: parent
-                color: "#FFFFFF"
+                color: "#18A259"
+                opacity: 0.8
+                radius: 8
                 z: -1
             }
         }
 
-        AppTextInput{
-            id:chatInput
-            width: 200
-            height: 50
+        Row{
+            spacing: 40
+            AppTextInput{
+                id:chatInput
+                width: 450
+                height: 50
 
-            font.pixelSize: 30
-            Rectangle{
-                anchors.fill: parent
-                color: "#FFFFFF"
-                z: -1
+                font.pixelSize: 30
+                Rectangle{
+                    anchors.fill: parent
+                    color: "#18A259"
+                    opacity: 0.7
+                    radius: 4
+                    z: -1
+                }
             }
-        }
 
-        AppButton{
-            id:chatButton
-            enabled: chatInput.text.length
-            onClicked: {
-                edit.append("my:"+chatInput.text)
-                Board.sendMasg(chatInput.text)
-                chatInput.clear()
+            ComButton{
+                id:chatButton
+                width: 100
+                height: 50
+                buttonText.text: qsTr("发送")
+                enabled: chatInput.text.length
+                onClicked: {
+                    edit.append("Me:"+chatInput.text)
+                    Board.sendMasg(chatInput.text)
+                    chatInput.clear()
+                }
             }
         }
 }
@@ -157,16 +177,18 @@ Scene {
         entityManager.removeAllEntities()
         timerRestart()
         gameArea.initializeField();
+        if(isNetPattern)
+            chatArea.visible = true
     }
 
     function timerRestart() {
         time = 30
         timer.restart()
         timeText.text = time.toString()
-        console.log("timer restart")
+//        console.log("timer restart")
     }
     function onNewMessage(msg) {
-        edit.append("you:"+msg)
+        edit.append("friend:"+msg)
     }
 
 }

@@ -41,6 +41,7 @@ public:
     //悔棋
     Q_INVOKABLE virtual void clickUndo();
 //    Q_INVOKABLE virtual void clickSum();
+//    Q_INVOKABLE virtual void clicklose();
     //超时
     Q_INVOKABLE void timeout();
     //net    
@@ -64,7 +65,7 @@ signals:
     void moveTo(int id,int row,int col);
 
     void newMessage(QString msg);
-
+//    void timerRestart();
 protected:
     void initChess(bool isRed = false);
     void setClickId(int id);

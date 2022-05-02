@@ -1,5 +1,6 @@
 #include "single_board.h"
 #include<qdebug.h>
+#include <QTimer>
 
 SingleBoard::SingleBoard():m_isRed{true}
 {
@@ -20,7 +21,8 @@ void SingleBoard::clickPath(int row, int col){
     qDebug()<<"clickPath():"<<row<<col;
     if(isRedTurn()){
         qDebug() <<"computerMove()";
-        computerMove();
+        QTimer::singleShot(100,this,&SingleBoard::computerMove);
+//        computerMove();
     }
 }
 
@@ -39,13 +41,14 @@ Step SingleBoard::computerGetBestMove()
 {
     QList<Step> steps;
     getAllPossibleMove(steps);
+    int level = 5;
 //    qDebug() <<"getAllPossibleMove()";
     int maxScore = -100000;
     Step ret;
     for(auto it = steps.begin();it!=steps.end();++it){
         Step step = *it;
         fakeMove(step);
-        int score = getMinScore();
+        int score = getMinScore(level-1,maxScore);
         unfakeMove(step);
         if(score>maxScore){
             maxScore = score;
@@ -82,23 +85,51 @@ void SingleBoard::getAllPossibleMove(QList<Step> &steps)
 
 }
 
-int SingleBoard::getMinScore()
+int SingleBoard::getMinScore(int level,int curMaxScore)
 {
+    if(level == 0) return calScore();
+
     QList<Step> steps;
     getAllPossibleMove(steps);
+
     int minScore = 100000;
     for(auto it = steps.begin();it!=steps.end();++it){
         Step step = *it;
         fakeMove(step);
-        int score = calScore();
+        int score = getMaxScore(level-1,minScore);
         unfakeMove(step);
+
+        if(score<=curMaxScore)
+            return score;
         if(score<minScore){
             minScore = score;
         }
     }
     return minScore;
 }
+int SingleBoard::getMaxScore(int level,int curMinScore)
+{
+    if(level == 0) return calScore();
 
+    QList<Step> steps;
+    getAllPossibleMove(steps);
+
+    int maxScore = -100000;
+    for(auto it = steps.begin();it!=steps.end();++it){
+        Step step = *it;
+        fakeMove(step);
+        int score = getMinScore(level-1,maxScore);
+        unfakeMove(step);
+
+        if(score>=curMinScore)
+            return score;
+
+        if(score>maxScore){
+            maxScore = score;
+        }
+    }
+    return maxScore;
+}
 void SingleBoard::fakeMove(Step step)
 {
     chesses[step.moveId]->moveTo(step.toRow,step.toCol);

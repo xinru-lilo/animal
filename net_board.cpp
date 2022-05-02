@@ -121,6 +121,7 @@ void NetBoard::onRead()
         int row = buf[1];
         int col = buf[2];
         Board::clickPath(row, col);
+//        emit timerRestart();
         break;
     }
     case 2: {
@@ -131,6 +132,14 @@ void NetBoard::onRead()
         QString msg = buf.mid(1);
         emit newMessage(msg);
     }
+//    case 4:{
+//        Board::clickSum();
+//        break;
+//    }
+//    case 5:{
+//        Board::clicklose();
+//        break;
+//    }
     default:
         break;
     }

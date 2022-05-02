@@ -15,7 +15,8 @@ public:
     void computerMove();
     Step computerGetBestMove();
     void getAllPossibleMove(QList<Step> &steps);
-    int getMinScore();
+    int getMinScore(int level,int curMaxScore);
+    int getMaxScore(int level,int curMinScore);
     void fakeMove(Step step);
     void unfakeMove(Step step);
     int calScore();

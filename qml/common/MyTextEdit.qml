@@ -22,4 +22,7 @@ Item {
     function append(str) {
         textEdit.append(str)
     }
+    function clear(){
+        textEdit.clear()
+    }
 }

@@ -18,6 +18,9 @@ GameWindow {
             if(pattern!==2){
                 gameWindow.state = "board"
                 boardScene.initBoard()
+                boardScene.isNetPattern = false;
+                gameoverScene.isNetPattern = false;
+
             }else{
                 gameWindow.state = "connect"
                 connectScene.initConnectBoard()
@@ -36,7 +39,7 @@ GameWindow {
         onNetPattern: {
             gameoverScene.isNetPattern = true;
             gameoverScene.netWho = who;
-//            boardScene.isNetPattern = true;
+            boardScene.isNetPattern = true;
         }
     }
 
@@ -48,6 +51,11 @@ GameWindow {
             gameoverScene.value = which
             gameoverScene.who = who
             console.log(gameoverScene.value)
+            gameWindow.state = "gameover"
+        }
+        onSum: {
+            gameoverScene.value = 0
+//            gameoverScene.who = 1
             gameWindow.state = "gameover"
         }
     }

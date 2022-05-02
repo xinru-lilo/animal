@@ -23,6 +23,7 @@ EntityBase {
         onClicked: {
             console.log("clickPath:",row,col);
             Board.clickPath(row, col)
+//            ti
             path.timerRestart()
         }
 
