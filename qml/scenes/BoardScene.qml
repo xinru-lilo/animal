@@ -218,12 +218,21 @@ Scene {
         onAccepted: boardScene.win(1,isMe)
     }
 
+    Dialog{
+        id:disconnectedDialog
+        anchors.fill: parent
+        enabled: false
+        standardButtons: Dialog.DialogButton.Ok
+        onAccepted: boardBack()
+    }
+
     function initBoard(){
         Board.timerRestart.connect(timerRestart)
         Board.newMessage.connect(onNewMessage)
         Board.askSum.connect(onAskSum)
         Board.answerSum.connect(onAnswerSum)
         Board.oppoDefeat.connect(onOppoDefeat)
+        Board.disconnected.connect(onDisconnected)
 
         entityManager.removeAllEntities()
         timerRestart()
@@ -232,6 +241,7 @@ Scene {
         edit.clear()
         chatInput.clear()
         losingButton.visible = false;
+        disconnectedDialog.visible = false;
 
         if(isNetPattern){
             chatArea.visible = true
@@ -264,5 +274,26 @@ Scene {
 //        tipsDialog.text = qsTr("对方已认输!")
         tipDialog.show(qsTr("对方已认输!"), qsTr("确定"))
     }
-
+    function onDisconnected(){
+        disconnectedDialog.visible = true
+        disconnectedDialog.show(qsTr("对方已断开链接"),qsTr("确定"))
+    }
+    function boardBack(){
+        if(isNetPattern){
+            chatArea.visible = false
+            losingButton.visible = false
+            edit.clear()
+            chatInput.clear()
+            isNetPattern = false;
+            disconnectedDialog.visible = false
+        }
+        if(isSinglePattern){
+            losingButton.visible = false
+            isSinglePattern = false
+        }
+        entityManager.removeAllEntities()
+        timer.stop()
+        back()
+        exit()
+    }
 }

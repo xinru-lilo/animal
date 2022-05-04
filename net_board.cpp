@@ -12,6 +12,8 @@ NetBoard::~NetBoard()
 {
     if(m_socket){
         m_socket->close();
+//        char buf = 7;
+//        m_socket->write(&buf,1);
         delete m_socket;
         m_socket = nullptr;
     }
@@ -99,6 +101,8 @@ bool NetBoard::joinGame(QString srvIP)
     if(!m_socket->waitForConnected())
         return false;
     connect(m_socket, &QTcpSocket::readyRead, this, &NetBoard::onRead);
+    connect(m_socket,&QTcpSocket::disconnected,this,&NetBoard::onDisconnected);
+
     qDebug()<<"socket state:"<<m_socket->state();
     return true;
 }
@@ -125,6 +129,8 @@ void NetBoard::onNewConnection()
     m_socket = m_server->nextPendingConnection();
     // 当有客户端数据发送过来时，触发信号，调用槽函数
     connect(m_socket, &QTcpSocket::readyRead, this, &NetBoard::onRead);
+    connect(m_socket,&QTcpSocket::disconnected,this,&NetBoard::onDisconnected);
+
     qDebug() <<"newConnect";
     emit netConnected();
 }
@@ -169,9 +175,20 @@ void NetBoard::onRead()
         emit oppoDefeat();
         break;
     }
+//    case 7:{
+//        emit disconnected();
+//        break;
+//    }
     default:
         break;
     }
+}
+
+void NetBoard::onDisconnected()
+{
+    qDebug()<<"socket state:"<<m_socket->state();
+    if(m_socket->state()==0)
+        emit disconnected();
 }
 
 

@@ -71,6 +71,7 @@ signals:
     void oppoDefeat();
 
     void timerRestart();
+    void disconnected();
 protected:
     void initChess(bool isRed = false);
     void setClickId(int id);

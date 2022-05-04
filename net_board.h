@@ -28,6 +28,7 @@ public:
 private slots:
     void onNewConnection();
     void onRead();
+    void onDisconnected();
 protected:
     bool creatNewConnect(QString srvIP);
 
