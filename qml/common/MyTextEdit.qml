@@ -9,10 +9,14 @@ Item {
     property alias text: textEdit.text
     property alias readOnly: textEdit.readOnly
     property alias font: textEdit.font
-
+    property alias horizontalAlignment: textEdit.horizontalAlignment
+    property alias verticalAlignment:textEdit.verticalAlignment
+    property alias color: textEdit.color
+    property alias wrapMode: textEdit.wrapMode
     ScrollView{
         id:view
         anchors.fill: parent
+        ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
         TextArea{
             id:textEdit
             text: ""

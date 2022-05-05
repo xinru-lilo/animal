@@ -64,8 +64,8 @@ void NetBoard::sendMasg(QString masg)
 
 void NetBoard::clickSum()
 {
-    if (isRedTurn() ^ m_isRed)
-        return;
+//    if (isRedTurn() ^ m_isRed)
+//        return;
     char buf = 4;
     m_socket->write(&buf, 1);
 }

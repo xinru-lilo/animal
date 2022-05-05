@@ -1,13 +1,16 @@
 import QtQuick 2.0
 
-Rectangle {
-    id: root
-    color: "transparent"
+Item {
+    id: item
+
     opacity: 0.0
-    property alias enabled: mouseArea.enabled
+//    property alias enabled: mouseArea.enabled
     property int dialogWidth: 500
     property int dialogHeight: 300
     property int standardButtons: Dialog.DialogButton.Ok | Dialog.DialogButton.Cancel
+    property alias text: myTextEdit
+    property alias bgRect: bgRect
+
     state: enabled ? "on" : "baseState"
 
     enum DialogButton {
@@ -22,7 +25,7 @@ Rectangle {
         State {
             name: "on"
             PropertyChanges {
-                target: root
+                target: item
                 opacity: 1.0
             }
         }
@@ -53,45 +56,60 @@ Rectangle {
         height: dialogHeight
         source: "../../assets/img/gameoverbg.png"
 
-        Text {
-            id: text
-            width: parent.width
-            height: 200
+        MyTextEdit {
+            id: myTextEdit
+            readOnly: true
+            y:50
+            anchors.horizontalCenter: parent.horizontalCenter
+            width: parent.width-80
+            height: parent.height-180
             anchors.margins: 10
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
+            wrapMode: Text.Wrap
             color: "#FFFFFF"
             font.pixelSize: 40
-            wrapMode: Text.WordWrap
+            Rectangle{
+                id:bgRect
+                anchors.fill: parent
+                color: "#FFFFFF"
+                z:-1
+                opacity: 0.9
+                visible: false
+            }
         }
 
         Row {
-            y: 180
+            y: parent.height-120
             anchors.horizontalCenter: parent.horizontalCenter
             height: 70
             spacing: 5
             ComButton {
-                id: okBtn
+                id: okButton
                 width: 200
                 height: 70
                 buttonText.text: qsTr("OK")
                 visible: standardButtons & Dialog.DialogButton.Ok
                 onClicked: {
                     accepted()
-                    root.enabled = false
-                    root.z = -1
+//                    item.enabled = false
+                    item.visible = false
+                    item.z = -1
+//                    bgRect.visible = false
                 }
             }
             ComButton {
-                id: cancelBtn
+                id: cancelButton
                 width: 200
                 height: 70
                 buttonText.text: qsTr("Cancel")
                 visible: standardButtons & Dialog.DialogButton.Cancel
                 onClicked: {
                     rejected()
-                    root.enabled = false
-                    root.z = -1
+//                    item.enabled = false
+                    item.visible = false
+                    item.z = -1
+//                    bgRect.visible = false
                 }
             }
         }
@@ -104,10 +122,11 @@ Rectangle {
     }
 
     function show(msg, leftBtn="OK", rightBtn="Cancel") {
-        text.text = msg
-        okBtn.buttonText.text = leftBtn
-        cancelBtn.buttonText.text = rightBtn
-        root.enabled = true
-        root.z = 1000
+        myTextEdit.text = msg
+        okButton.buttonText.text = leftBtn
+        cancelButton.buttonText.text = rightBtn
+//        item.enabled = true
+        item.visible = true
+        item.z = 1000
     }
 }

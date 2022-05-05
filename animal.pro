@@ -67,7 +67,7 @@ macx {
 DISTFILES += \
     qml/common/Block.qml \
     qml/common/ComButton.qml \
-    qml/common/Dialog.qml \
+    qml/common/MyDialog.qml \
     qml/common/MyTextEdit.qml \
     qml/entities/Chess.qml \
     qml/common/GameArea.qml \
