@@ -94,7 +94,7 @@ Scene {
             width: 100
             height: 70
             buttonText.text: qsTr("返回")
-            onClicked: backDialog.show(qsTr("您确定要返回吗？"), qsTr("确定"), qsTr("取消"))
+            onClicked: backDialog.show(2,qsTr("您确定要返回吗？"))
         }
     }
 
@@ -123,7 +123,7 @@ Scene {
             bg:"../../assets/img/rule.png"
             onClicked: {
                 ruleDialog.visible = true
-                ruleDialog.show(qsTr("一、斗兽棋的棋子
+                ruleDialog.show(1,qsTr("一、斗兽棋的棋子
     斗兽棋棋子共十六个，分为红蓝双方（左侧一方为蓝方，右侧为红方），双方各有八只一样的棋子，按照战斗力强弱排列为：象>狮>虎>豹>狼>狗>猫>鼠。
     二、斗兽棋的走法
     1.游戏开始时，蓝方先走，然后轮流走棋。每次可走动一只兽，每只兽每次走一方格，前后左右均可，狮、虎、鼠还有不同走法。
@@ -135,9 +135,10 @@ Scene {
     3.互吃法：凡同类相遇，可以互吃。
     4.陷阱：走入敌方陷阱的兽会被限制战斗力，可被敌方任意棋子吃掉，若走进己方陷阱，则不受影响。
     四、斗兽棋胜负判定:
-    1.任何一方的兽走入敌方的兽穴就算胜利。
-    2.任何人一方中途认输，对方获胜。
-    3.在双方同意的情况下可和棋"),qsTr("确定"))
+1.任何一方的兽走入敌方的兽穴就算胜利。
+2.任何一方的棋子被吃光就算失败，对方胜利。
+3.任何人一方中途认输，对方获胜。
+4.在双方同意的情况下可和棋。"),qsTr("确定"))
             }
         }
 
@@ -312,22 +313,22 @@ Scene {
         edit.append("friend:"+msg)
     }
     function onAskSum(){
-        askSumDialog.show(qsTr("对方求和，您是否同意？"), qsTr("同意"), qsTr("拒绝"))
+        askSumDialog.show(2,qsTr("对方求和，您是否同意？"), qsTr("同意"), qsTr("拒绝"))
     }
     function onAnswerSum(value){
         if(value===1)
             boardScene.sum(0)
         else{
-            tipsDialog.show(qsTr("对方拒绝求和!"), qsTr("确定"))
+            tipsDialog.show(1,qsTr("对方拒绝求和!"), qsTr("确定"))
         }
     }
     function onOppoDefeat(){
 //        tipsDialog.text = qsTr("对方已认输!")
-        tipDialog.show(qsTr("对方已认输!"), qsTr("确定"))
+        tipDialog.show(1,qsTr("对方已认输!"), qsTr("确定"))
     }
     function onDisconnected(){
         disconnectedDialog.visible = true
-        disconnectedDialog.show(qsTr("对方已断开链接"),qsTr("确定"))
+        disconnectedDialog.show(1,qsTr("对方已断开链接"),qsTr("确定"))
     }
     function boardBack(){
         if(isNetPattern){

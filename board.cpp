@@ -260,7 +260,7 @@ bool Board::isWin()
     if(m_chesses[m_clickedId]->isRed()) {
         if(row==3&&col==0)
             return true;
-        for(int i = 8;i<16;++i){
+        for(int i = 0;i<8;++i){
             if(m_chesses[i]->isDead())
                 ++total;
         }
@@ -268,7 +268,7 @@ bool Board::isWin()
     } else{
         if(row==3&&col==8)
             return true;
-        for(int i = 0;i<8;++i){
+        for(int i = 8;i<16;++i){
             if(m_chesses[i]->isDead())
                 ++total;
         }

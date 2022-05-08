@@ -13,10 +13,10 @@ Item {
 
     state: enabled ? "on" : "baseState"
 
-    enum DialogButton {
-        Ok = 0x1,
-        Cancel = 0x2
-    }
+//    enum DialogButton {
+//        Ok = 0x1,
+//        Cancel = 0x2
+//    }
 
     signal accepted
     signal rejected
@@ -89,7 +89,7 @@ Item {
                 width: 200
                 height: 70
                 buttonText.text: qsTr("OK")
-                visible: standardButtons & Dialog.DialogButton.Ok
+//                visible: standardButtons & Dialog.DialogButton.Ok
                 onClicked: {
                     accepted()
 //                    item.enabled = false
@@ -103,13 +103,14 @@ Item {
                 width: 200
                 height: 70
                 buttonText.text: qsTr("Cancel")
-                visible: standardButtons & Dialog.DialogButton.Cancel
+//                visible: standardButtons & Dialog.DialogButton.Cancel
                 onClicked: {
                     rejected()
 //                    item.enabled = false
                     item.visible = false
                     item.z = -1
 //                    bgRect.visible = false
+                    cancelButton.visible = true
                 }
             }
         }
@@ -121,12 +122,14 @@ Item {
         z:-1
     }
 
-    function show(msg, leftBtn="OK", rightBtn="Cancel") {
+    function show(pattern=2,msg, leftBtn="确定", rightBtn="取消") {
         myTextEdit.text = msg
         okButton.buttonText.text = leftBtn
         cancelButton.buttonText.text = rightBtn
 //        item.enabled = true
         item.visible = true
         item.z = 1000
+        if(pattern===1)
+            cancelButton.visible=false
     }
 }

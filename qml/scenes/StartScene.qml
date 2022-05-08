@@ -73,7 +73,7 @@ Scene {
             bg:"../../assets/img/rule.png"
             onClicked: {
                 ruleDialog.visible = true
-                ruleDialog.show(qsTr("一、斗兽棋的棋子
+                ruleDialog.show(1,qsTr("一、斗兽棋的棋子
     斗兽棋棋子共十六个，分为红蓝双方（左侧一方为蓝方，右侧为红方），双方各有八只一样的棋子，按照战斗力强弱排列为：象>狮>虎>豹>狼>狗>猫>鼠。
     二、斗兽棋的走法
     1.游戏开始时，蓝方先走，然后轮流走棋。每次可走动一只兽，每只兽每次走一方格，前后左右均可，狮、虎、鼠还有不同走法。
