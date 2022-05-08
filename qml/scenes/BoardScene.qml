@@ -99,10 +99,12 @@ Scene {
     }
 
     Rectangle{
-        width: 120
+        width: 220
         height: 40
-        color: "#FFD700"
-        z:-1
+        color: "#ccff00"
+        anchors.horizontalCenter: parent.horizontalCenter
+        radius: 0.5
+        y:80
         Text {
             id: timeText
             text: qsTr("")
@@ -215,7 +217,7 @@ Scene {
                 gameArea.clearPathes()
                 timerRestart()
             }
-            timeText.text = "time:"+time.toString()
+            timeText.text = "时间剩余："+time.toString()+"秒"
         }
     }
 
@@ -303,7 +305,7 @@ Scene {
     function timerRestart() {
         time = 30
         timer.restart()
-        timeText.text = time.toString()
+        timeText.text = "时间剩余："+time.toString()+"秒"
 //        console.log("timer restart")
     }
     function onNewMessage(msg) {

@@ -1,6 +1,8 @@
 #include "single_board.h"
 #include<qdebug.h>
 #include <QTimer>
+#include <QTime>
+#include <QtGlobal>
 
 SingleBoard::SingleBoard():m_isRed{true}
 {
@@ -160,11 +162,16 @@ int SingleBoard::calScore()
         if(chesses[i]->isDead())
             continue;
         bluescore += chessesScore[chesses[i]->type()];
+        if(chesses[i]->col()>3)
+            bluescore += chessesScore[chesses[i]->type()];
+
     }
     for(int i = 8;i<16;++i){
         if(chesses[i]->isDead())
             continue;
         redscore += chessesScore[chesses[i]->type()];
+        if(chesses[i]->col()<5)
+            redscore += chessesScore[chesses[i]->type()];
     }
     return redscore-bluescore;
 }

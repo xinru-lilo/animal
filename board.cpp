@@ -256,12 +256,24 @@ bool Board::isWin()
 {
     auto row = m_chesses[m_clickedId]->row();
     auto col = m_chesses[m_clickedId]->col();
+    auto total = 0;
     if(m_chesses[m_clickedId]->isRed()) {
         if(row==3&&col==0)
             return true;
-    } else
+        for(int i = 8;i<16;++i){
+            if(m_chesses[i]->isDead())
+                ++total;
+        }
+        if(total==8) return true;
+    } else{
         if(row==3&&col==8)
             return true;
+        for(int i = 0;i<8;++i){
+            if(m_chesses[i]->isDead())
+                ++total;
+        }
+        if(total==8) return true;
+    }
     return false;
 }
 

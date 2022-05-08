@@ -102,7 +102,11 @@ Scene {
             if(which===0)
                 whowin.source = "../../assets/img/sum.png"
             else if(which===1)
-                whowin.source = "../../assets/img/lose.png"
+                if(who!==1){
+                    whowin.source = "../../assets/img/win.png"
+                }else{
+                    whowin.source = "../../assets/img/lose.png"
+                }
         }else{
             if(which===0)
                 whowin.source = "../../assets/img/sum.png"
